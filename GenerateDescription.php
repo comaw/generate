@@ -33,7 +33,16 @@ class GenerateDescription
         if(!$this->item || !$this->template){
             return null;
         }
-        $template = $this->getCurrentTemplate($this->template->template);
+        $template = $this->template->template;
+        $template = preg_replace_callback('#\[\[([^\[\]]*)\]\]#Ssi', function ($matches){
+            if(isset($matches[1])){
+                $arr = explode('|', $matches[1]);
+                $arr = "'" . $this->arrayRand($arr) . "'";
+                return $arr;
+            }
+            return '';
+        }, $template);
+        $template = $this->getCurrentTemplate($template);
         $tpl = [];
         $tpl['product'] = $this->item;
         $productDescription = new ProductDescription();
@@ -73,7 +82,13 @@ class GenerateDescription
         $manufacturer = $array['manufacturer'];
         $category = $array['category'];
         $template = '?> ' . str_replace(['{{', '}}'], [' <?= ', ' ?> '], $template) . ' <?php';
+//        var_dump(htmlspecialchars($template));
         return eval($template);
+    }
+
+    public function arrayRand($array = []){
+        $key = array_rand($array);
+        return $array[$key];
     }
 
     /**
