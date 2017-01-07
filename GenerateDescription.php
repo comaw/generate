@@ -5,6 +5,7 @@ include_once (__DIR__ . '/models/Product.php');
 include_once (__DIR__ . '/models/ProductDescription.php');
 include_once (__DIR__ . '/models/Manufacturer.php');
 include_once (__DIR__ . '/models/CategoryDescription.php');
+include_once (__DIR__ . '/models/ProductAttribute.php');
 
 class GenerateDescription
 {
@@ -39,7 +40,6 @@ class GenerateDescription
         $tpl['manufacturer'] = $manufacturer->getById($this->item->manufacturer_id);
         $categoryDescription = new CategoryDescription();
         $tpl['category'] = $categoryDescription->getById($this->item->main_category);
-
         return $this->parseTemplate($template, $tpl);
     }
 
@@ -51,15 +51,24 @@ class GenerateDescription
      */
     public function parseTemplate ( $template , $array = [])
     {
-        return preg_replace_callback ( '#\{\$([a-zA-Z0-9\-_\>\:\(\)]*?)\}#Ss' , function ($matches) use ($array){
+        return preg_replace_callback ( '#\{\$([^\{\}]*?)\}#Ss' , function ($matches) use ($array){
+
             $first = explode('->', $matches[1]);
             $second = isset($first[1]) ? $first[1] : null;
             $first = $first[0];
-            if(isset($array[$first])){
-                if(is_object($array[$first]) && $second){
-                    return $array[$first]->{$second};
+            if($first == 'attribute'){
+                $attribute = new ProductAttribute();
+                $second = trim($second, '\'');
+                $second = trim($second, '"');
+                $attribute = $attribute->getById($second, $array['product']->product_id);
+                return isset($attribute->text) ? $attribute->text : '' ;
+            }else{
+                if(isset($array[$first])){
+                    if(is_object($array[$first]) && $second){
+                        return $array[$first]->{$second};
+                    }
+                    return $array[$first];
                 }
-                return $array[$first];
             }
             return '';
         } , $template );
