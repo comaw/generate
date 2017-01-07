@@ -1,0 +1,2 @@
+# generate
+Generate product descriptions
