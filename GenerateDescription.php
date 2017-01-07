@@ -58,6 +58,10 @@ class GenerateDescription
                 $name = trim($matches[1], '\'');
                 $name = trim($name, '"');
                 $attribute = new ProductAttribute();
+                if(mb_substr_count($name, '->', 'UTF-8') > 0) {
+                    $attribute = $attribute->getByIdAndGroup($name, $array['product']->product_id);
+                    return isset($attribute->text) ? "'" . $attribute->text . "'" : "''";
+                }
                 $attribute = $attribute->getById($name, $array['product']->product_id);
                 return isset($attribute->text) ? "'" . $attribute->text . "'" : "''";
             }
