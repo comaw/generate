@@ -81,11 +81,9 @@ class GenerateDescription
         $description = $array['description'];
         $manufacturer = $array['manufacturer'];
         $category = $array['category'];
-        $template = '?> ' . str_replace(['{{', '}}'], [' <?= ', ' ?> '], $template) . ' <?php ';
+        $template = '?> ' . str_replace(['{{', '}}'], ['<?=', '?>'], $template) . ' <?php ?>';
 //        var_dump(htmlspecialchars($template));
-        $template = eval(trim($template));
-        $template = trim($template, '<?phpNULL');
-        return $template;
+        return eval($template);
     }
 
     public function arrayRand($array = []){
