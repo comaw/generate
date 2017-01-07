@@ -81,7 +81,7 @@ class GenerateDescription
         $description = $array['description'];
         $manufacturer = $array['manufacturer'];
         $category = $array['category'];
-        $template = '?> ' . str_replace(['{{', '}}'], ['<?=', '?>'], $template) . ' <?php ?>';
+        $template = '?> ' . str_replace(['{{', '}}'], ['<?=', '; ?>'], $template) . '';
 //        var_dump(htmlspecialchars($template));
         return eval($template);
     }
