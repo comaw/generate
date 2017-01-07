@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED ^ E_WARNING);
+
 include_once (__DIR__ . '/models/Template.php');
 include_once (__DIR__ . '/models/Product.php');
 include_once (__DIR__ . '/models/ProductDescription.php');
@@ -57,9 +59,9 @@ class GenerateDescription
                 $name = trim($name, '"');
                 $attribute = new ProductAttribute();
                 $attribute = $attribute->getById($name, $array['product']->product_id);
-                return isset($attribute->text) ? "'" . $attribute->text . "'" : "'" . $matches[1] . "'";
+                return isset($attribute->text) ? "'" . $attribute->text . "'" : "''";
             }
-            return $matches[1];
+            return "''";
 
         } , $template );
         $product = $array['product'];
