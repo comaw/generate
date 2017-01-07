@@ -51,27 +51,23 @@ class GenerateDescription
      */
     public function parseTemplate ( $template , $array = [])
     {
-        return preg_replace_callback ( '#\{\$([^\{\}]*?)\}#Ss' , function ($matches) use ($array){
-
-            $first = explode('->', $matches[1]);
-            $second = isset($first[1]) ? $first[1] : null;
-            $first = $first[0];
-            if($first == 'attribute'){
+        $template = preg_replace_callback ( '#\$attribute\-\>\'([^\']*?)\'#Ssi' , function ($matches) use ($array){
+            if(isset($matches[1])){
+                $name = trim($matches[1], '\'');
+                $name = trim($name, '"');
                 $attribute = new ProductAttribute();
-                $second = trim($second, '\'');
-                $second = trim($second, '"');
-                $attribute = $attribute->getById($second, $array['product']->product_id);
-                return isset($attribute->text) ? $attribute->text : '' ;
-            }else{
-                if(isset($array[$first])){
-                    if(is_object($array[$first]) && $second){
-                        return $array[$first]->{$second};
-                    }
-                    return $array[$first];
-                }
+                $attribute = $attribute->getById($name, $array['product']->product_id);
+                return isset($attribute->text) ? "'" . $attribute->text . "'" : "'" . $matches[1] . "'";
             }
-            return '';
+            return $matches[1];
+
         } , $template );
+        $product = $array['product'];
+        $description = $array['description'];
+        $manufacturer = $array['manufacturer'];
+        $category = $array['category'];
+        $template = '?> ' . str_replace(['{{', '}}'], [' <?= ', ' ?> '], $template) . ' <?php';
+        return eval($template);
     }
 
     /**
