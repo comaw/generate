@@ -36,14 +36,19 @@ Generate product descriptions
 3. тексты шаблонов не могут содержать такие вещи как `<?php` и `?>` (`<?=` и `?>` или `<?%` и `?>`)
 4. Для работы с таблицами product, product_description, manufacturer, category_description - 
 нужно просто вызывать поля как обьект соответствущей переменной
+
 * product == $product (напрмиер $product->price - выведет цену продукта)
 * product_description == $description (напрмиер $description->name - выведет имя продукта)
 * manufacturer == $manufacturer (напрмиер $manufacturer->name - выведет имя производителя)
 * category_description == $category (напрмиер $category->name - выведет имя категории)
+
 5. Для работы с атребутами товаров нужно использовать конструкцию вида:
+
 * `$attribute->'Широкоформатный'` - то есть передаем имя атребуту. 
 Если у товара есть такой аттребут - будет выведенно его название, если нет - просто пустое место
+
 6. В шаблонах можно использовать php конструкции, например:
+
 - `($product->price > 1) ? 'тест' : 'тест 2'`
 - функции - `number_format($price, 0, '.', ' ')`
 
