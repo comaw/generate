@@ -42,6 +42,16 @@ class GenerateDescription
             }
             return '';
         }, $template);
+        $template = str_replace("''", ' ', $template);
+        $template = preg_replace_callback('#\[\[([^\[\]]*)\]\]#Ssi', function ($matches){
+            if(isset($matches[1])){
+                $arr = explode('|', $matches[1]);
+                $arr = "'" . $this->arrayRand($arr) . "'";
+                return $arr;
+            }
+            return '';
+        }, $template);
+        $template = str_replace("''", "'", $template);
         $template = $this->getCurrentTemplate($template);
         $tpl = [];
         $tpl['product'] = $this->item;
@@ -77,6 +87,7 @@ class GenerateDescription
             return "''";
 
         } , $template );
+
         $product = $array['product'];
         $description = $array['description'];
         $manufacturer = $array['manufacturer'];
